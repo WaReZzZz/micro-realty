@@ -1,0 +1,41 @@
+version: "3.6"
+services:
+  composer:
+    restart: 'no'
+    image: composer
+    command: sh /app/start-container.sh
+    working_dir: /app
+    volumes:
+    - .:/app
+
+  php-app:
+    build: .
+    volumes:
+    - .:/app
+    #- ./vendor:/app/vendor:cached
+    command: php -S 0.0.0.0:8000 -t public
+    ports:
+    - "8002:8000"
+    working_dir: /app
+    links:
+      - composer
+    depends_on:
+    - mysql
+    - composer
+    env_file:
+    - .env
+
+  mysql:
+    image: mysql:5.6
+    ports:
+    - "3309:3306"
+    environment:
+    - MYSQL_ROOT_PASSWORD=secret
+    - MYSQL_DATABASE=micro-realty
+    - MYSQL_USER=warezzzz
+    - MYSQL_PASSWORD=secret
+    volumes:
+    - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:
