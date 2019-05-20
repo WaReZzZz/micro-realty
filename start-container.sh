@@ -2,3 +2,4 @@
 
 composer global require "laravel/lumen-installer"
 composer update
+composer dump-autoload
